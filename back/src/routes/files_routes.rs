@@ -1,5 +1,14 @@
-use actix_web::web::{Data, Json};
-use diesel::RunQueryDsl;
+use std::{
+    fs::{self, File},
+    str::FromStr, io::Read,
+};
+
+use actix_multipart::form::MultipartForm;
+use actix_web::{web::{self, Data, Json}, HttpResponse, HttpRequest};
+use diesel::{
+    query_dsl::methods::FilterDsl, BoolExpressionMethods, ExpressionMethods, RunQueryDsl,
+};
+use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::{
@@ -13,18 +22,77 @@ use crate::{
     utils::{BASE_URL, CARGO_MANIFEST_DIR},
 };
 
+#[get("/f/{id}/{name}")]
+pub async fn get_file<'a, 'b>(
+    req: HttpRequest,
+    path: web::Path<(String, String)>,
+    pool: Data<Pool>,
+) -> Result<HttpResponse, DoggoError<'b>> {
+    let (id, name) = path.into_inner();
+    let uid = match Uuid::from_str(&id) {
+        Ok(uid) => uid,
+        Err(_) => return Err(DoggoError::invalid_id_format()),
+    };
+    use crate::schema::files;
+    let conn = &mut pool.get().unwrap();
+    match files::table
+        .filter(files::id.eq(uid).and(files::name.eq(&name)))
+        .get_result::<DoggoFile>(conn)
+    {
+        Ok(f) => {
+            let file = match actix_files::NamedFile::open_async(f.local_url).await {
+                Ok(r) => r,
+                Err(_) => return Err(DoggoError::not_found())
+            };
+            return Ok(file.into_response(&req));
+        }
+        Err(err) => match err {
+            diesel::result::Error::NotFound => return Err(DoggoError::not_found()),
+            _ => return Err(DoggoError::internal_server_error()),
+        },
+    }
+}
+
+#[post("/files")]
 pub async fn upload_file<'a, 'b>(
-    form: UploadMultipart,
+    form: MultipartForm<UploadMultipart>,
     pool: Data<Pool>,
 ) -> Result<Json<DoggoResponse<'a, DoggoFile>>, DoggoError<'b>> {
     let id = Uuid::new_v4();
-    let net_url = format!("{}/{}/{}", BASE_URL.to_string(), id, form.name.0);
-    let local_url = format!("{}/files/{}", CARGO_MANIFEST_DIR.to_string(), id);
+    let mime = match form.name().split('.').last() {
+        Some(m) => m,
+        None => ""
+    };
+    let local_url = format!("{}/files/{}.{}", *CARGO_MANIFEST_DIR, id, mime);
+    // while let Some(e) = form.next().await {
+    //     println!("test");
+    //     match e {
+    //         Ok(f) => {
+    //             println!("ok");
+    //             all_fields.push(f);
+    //             println!("hello");
+    //         }
+    //         Err(err) => {
+    //             println!("bad");
+    //             eprintln!("Error in parsing form data: {err}");
+    //             return Err(DoggoError::bad_request("Invalid Multipart form-data"));
+    //         }
+    //     }
+    // }
+    let temp_path = form.file.file.path();
+    File::create(&local_url).expect("Could not create file");
+    fs::copy(temp_path, &local_url).expect("Could not copy temp file into persitent file");
+    // let form_file = form.file;
+
+    // form.file.file.persist(&local_url);
+    let file_name = form.name();
+
+    let net_url = format!("{}/f/{}/{}", BASE_URL.to_string(), id, file_name);
     let new_file = NewDoggoFile {
         id,
-        name: form.name.0,
+        name: String::from(file_name),
         net_url,
-        local_url,
+        local_url: local_url.clone(),
     };
     use crate::schema::files;
     let conn = &mut pool.get().unwrap();
@@ -43,4 +111,15 @@ pub async fn upload_file<'a, 'b>(
             return Err(DoggoError::internal_server_error());
         }
     }
+}
+
+#[get("/files")]
+pub async fn all_files<'a, 'b>(
+    pool: Data<Pool>,
+) -> Result<Json<DoggoResponse<'a, Vec<DoggoFile>>>, DoggoError<'b>> {
+    let loaded_files = DoggoFile::get_all(pool)?;
+    Ok(Json(DoggoResponse {
+        data: loaded_files,
+        description: "All files",
+    }))
 }
