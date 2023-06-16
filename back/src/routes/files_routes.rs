@@ -22,6 +22,35 @@ use crate::{
     utils::{BASE_URL, CARGO_MANIFEST_DIR},
 };
 
+#[get("/apple-app-site-association")]
+pub async fn get_apple_app_site_association<'b>(req: HttpRequest) -> Result<HttpResponse, DoggoError<'b>> {
+	let file = match actix_files::NamedFile::open_async("/home/cyril/Documents/github/doggo-share-2/apple-app-site-association").await {
+		Ok(r) => r,
+		Err(err) => {eprintln!("Error getting apple file: {err}");return Err(DoggoError::not_found())}
+	};
+	return Ok(file.into_response(&req));
+}
+
+#[get("/file/info/{id}")]
+pub async fn get_file_info<'a, 'b>(path: web::Path<String>, pool: web::Data<Pool>) -> Result<Json<DoggoResponse<'a, DoggoFile>>, DoggoError<'b>> {
+	let id = path.into_inner();
+	let uid = match Uuid::from_str(&id) {
+		Ok(uid) => uid,
+		Err(_) => return Err(DoggoError::invalid_id_format())
+	};
+	use crate::schema::files;
+	let conn = &mut pool.get().unwrap();
+	match files::table.filter(files::id.eq(uid)).get_result::<DoggoFile>(conn) {
+		Ok(f) => return Ok(Json(DoggoResponse {
+					description: "Associated file",
+					data: f
+				})),
+		Err(_) => {
+			return Err(DoggoError::not_found());
+		}
+	}
+}
+
 #[get("/f/{id}/{name}")]
 pub async fn get_file<'a, 'b>(
     req: HttpRequest,
