@@ -1,0 +1,23 @@
+{
+  "activitycontinuation": {
+    "apps": [
+      "9XGJZ44QS5.net.doggo-saloon.doggo-share"
+    ]
+  },
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "9XGJZ44QS5.net.doggo-saloon.doggo-share"
+        ],
+        "components": [
+          {
+            "/": "/*",
+            "exclude": false,
+            "comment": "Matches all URLs"
+          }
+        ]
+      }
+    ]
+  }
+}

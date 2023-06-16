@@ -9,7 +9,7 @@ use utils::{API_PORT, DATABASE_URL};
 use chrono::Duration;
 use uuid::Uuid;
 
-use crate::{routes::files_routes::get_file, models::db::file::DoggoFile};
+use crate::{routes::files_routes::{get_file, get_apple_app_site_association, get_file_info}, models::db::file::DoggoFile};
 
 #[macro_use]
 extern crate actix_web;
@@ -36,6 +36,8 @@ async fn main() -> std::io::Result<()> {
             .service(upload_file)
             .service(all_files)
             .service(get_file)
+		.service(get_apple_app_site_association)
+		.service(get_file_info)
     })
     .bind((
         "0.0.0.0",
