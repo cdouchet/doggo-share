@@ -36,6 +36,10 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict/>
+	<key>NSCameraUsageDescription</key>
+	<string>Autorisez l'accès à votre caméra pour partager une photo</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Autorisez l'accès à votre microphone pour partager une vidéo</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Autorisez l&apos;accès à Apple Music pour partager vos musiques sur Doggo Share</string>
 	<key>NSPhotoLibraryUsageDescription</key>

@@ -38,26 +38,28 @@ class LastLink extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         side: const BorderSide(color: DoggoColors.secondary, width: 4),
       ),
-      title: Text(link.name),
-      leading: Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            color: DoggoColors.darkSecondary,
-            borderRadius: BorderRadius.circular(12)),
-        height: 45,
-        width: 45,
-        child: _getMime() == "image"
-            ? CachedNetworkImage(
-                imageUrl: link.url,
-                errorWidget: (context, url, error) => Text(
-                    link.name.split('.').last.toUpperCase(),
-                    style: const TextStyle(color: Colors.white)),
-                fit: BoxFit.cover,
-              )
-            : Text(
-                _getMime(),
-                style: const TextStyle(color: Colors.white),
-              ),
+      title: Text(link.name, overflow: TextOverflow.ellipsis,),
+      leading: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: DoggoColors.darkSecondary,
+              borderRadius: BorderRadius.circular(12),
+              image: _getMime() == "image"
+                  ? DecorationImage(
+                      fit: BoxFit.cover,
+                      image: CachedNetworkImageProvider(link.url))
+                  : null),
+          height: 45,
+          width: 45,
+          child: _getMime() == "image"
+              ? Container()
+              : Text(
+                  _getMime(),
+                  style: const TextStyle(color: Colors.white),
+                ),
+        ),
       ),
       trailing: IconButton(
         icon: const Icon(Icons.remove, color: DoggoColors.secondary),

@@ -33,10 +33,10 @@ class DoggoApi {
     final request = await httpClient.postUrl(Uri.parse("$baseUrl/files"));
     int byteCount = 0;
     http.MultipartFile multipart =
-        await http.MultipartFile.fromPath("file", multi.file.path!);
+        await http.MultipartFile.fromPath("file", multi.file.path);
     http.MultipartRequest requestMultipart =
         http.MultipartRequest("POST", Uri.parse("$baseUrl/files"));
-    requestMultipart.fields.addAll({"name": multi.file.name});
+    requestMultipart.fields.addAll({"name": multi.name});
     requestMultipart.files.add(multipart);
     http.ByteStream fileStream = requestMultipart.finalize();
     // final fileStream = file.openRead();

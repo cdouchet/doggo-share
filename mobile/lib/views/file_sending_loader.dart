@@ -1,4 +1,5 @@
-import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/api/doggo_api.dart';
@@ -10,7 +11,7 @@ import 'package:mobile/views/success_file.dart';
 import 'package:provider/provider.dart';
 
 class FileSendingLoader extends StatefulWidget {
-  final PlatformFile file;
+  final File file;
   const FileSendingLoader({super.key, required this.file});
 
   @override
@@ -32,7 +33,7 @@ class _FileSendingLoaderState extends State<FileSendingLoader> {
       _isSuccess = null;
     });
     DoggoApi.uploadFile(
-        DoggoMultipart(name: widget.file.name, file: widget.file), (progress) {
+        DoggoMultipart(name: widget.file.path.split('/').last, file: widget.file), (progress) {
       print("Progress: $progress");
       setState(() {
         _progress = progress;
@@ -85,7 +86,7 @@ class _FileSendingLoaderState extends State<FileSendingLoader> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (_isSuccess == null) ...[
-                  Text("Envoi de ${widget.file.name}",
+                  Text("Envoi de ${widget.file.path.split('/').last}",
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 22)),
                   const SizedBox(

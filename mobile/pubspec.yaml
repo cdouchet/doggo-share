@@ -58,7 +58,7 @@ dependencies:
   just_audio:
   just_audio_background: 
   better_player: ^0.0.83
-  modal_bottom_sheet: ^2.1.2
+  image_picker: ^0.8.9
 
 dev_dependencies:
   flutter_test:
