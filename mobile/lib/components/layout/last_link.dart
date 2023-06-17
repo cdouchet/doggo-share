@@ -67,7 +67,6 @@ class LastLink extends StatelessWidget {
           LinkStorageService().deleteLink(link);
         },
       ),
-      tileColor: Colors.transparent,
     );
   }
 }

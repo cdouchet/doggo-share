@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/theme/colors.dart';
 import 'package:mobile/views/file_sending_loader.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart' as bs;
 
 class CreateDoggoFileView extends StatefulWidget {
   const CreateDoggoFileView({super.key});
@@ -25,6 +26,8 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle:
+            const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
         centerTitle: true,
         title: const Text("Envoyer un fichier",
             style: TextStyle(
@@ -63,17 +66,8 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: ElevatedButton(
-                onPressed: () async {
-                  FilePickerResult? result =
-                      await FilePicker.platform.pickFiles(withData: true);
-                  if (result == null) {
-                    return;
-                  }
-                  if (result.isSinglePick) {
-                    setState(() {
-                      _selectedFile = result.files.first;
-                    });
-                  }
+                onPressed: () {
+                  _showDoggoDialog();
                 },
                 style: ButtonStyle(
                   shape: MaterialStatePropertyAll(
@@ -168,5 +162,38 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
         ),
       ),
     );
+  }
+
+  Widget _bottomModalItem(IconData icon, String title) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Icon(icon, color: DoggoColors.secondary),
+        Text(title, style: const TextStyle(fontSize: 22))],
+      ),
+    );
+  }
+
+  _showDoggoDialog() {
+    bs.showCupertinoModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+              color: Colors.transparent,
+              padding: const EdgeInsets.all(18),
+              child: const Column());
+        });
+    // FilePickerResult? result =
+    //                   await FilePicker.platform.pickFiles(withData: true);
+    //               if (result == null) {
+    //                 return;
+    //               }
+    //               if (result.isSinglePick) {
+    //                 setState(() {
+    //                   _selectedFile = result.files.first;
+    //                 });
+    //               }
   }
 }

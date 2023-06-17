@@ -18,6 +18,7 @@ class _SuccessFileState extends State<SuccessFile> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          systemOverlayStyle: const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
           centerTitle: true,
           title: const Text("Succès",
               style: TextStyle(
