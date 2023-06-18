@@ -8,7 +8,6 @@ use actix_web::{web::{self, Data, Json}, HttpResponse, HttpRequest};
 use diesel::{
     query_dsl::methods::FilterDsl, BoolExpressionMethods, ExpressionMethods, RunQueryDsl,
 };
-use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::{
