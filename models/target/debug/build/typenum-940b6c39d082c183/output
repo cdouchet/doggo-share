@@ -1,0 +1,3 @@
+cargo:rerun-if-changed=build/main.rs
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/Users/c.douchet/Documents/github/doggo-share-2/models/target/debug/build/typenum-940b6c39d082c183/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/Users/c.douchet/Documents/github/doggo-share-2/models/target/debug/build/typenum-940b6c39d082c183/out/op.rs

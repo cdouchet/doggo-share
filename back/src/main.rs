@@ -3,19 +3,19 @@ use std::{fs::{self}, sync::{Arc, Mutex, mpsc::channel}};
 use actix_web::{web, App, HttpServer};
 use db::Pool;
 use diesel::{r2d2::ConnectionManager, PgConnection, QueryDsl, ExpressionMethods, RunQueryDsl};
+use doggo_share_models::doggo_file::DoggoFile;
 use dotenvy::dotenv;
 use routes::files_routes::{upload_file, all_files};
 use utils::{API_PORT, DATABASE_URL};
 use chrono::Duration;
 use uuid::Uuid;
 
-use crate::{routes::files_routes::{get_file, get_apple_app_site_association, get_file_info}, models::db::file::DoggoFile};
+use crate::{routes::files_routes::{get_file, get_apple_app_site_association, get_file_info}};
 
 #[macro_use]
 extern crate actix_web;
 
 mod db;
-mod handlers;
 mod models;
 mod routes;
 mod schema;

@@ -1,0 +1,11 @@
+/Users/c.douchet/Documents/github/doggo-share-2/models/target/debug/deps/bitflags-5c30a35e96cca51a.rmeta: /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/lib.rs /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/iter.rs /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/parser.rs /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/traits.rs /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/public.rs /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/internal.rs /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/external.rs
+
+/Users/c.douchet/Documents/github/doggo-share-2/models/target/debug/deps/bitflags-5c30a35e96cca51a.d: /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/lib.rs /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/iter.rs /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/parser.rs /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/traits.rs /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/public.rs /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/internal.rs /Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/external.rs
+
+/Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/lib.rs:
+/Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/iter.rs:
+/Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/parser.rs:
+/Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/traits.rs:
+/Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/public.rs:
+/Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/internal.rs:
+/Users/c.douchet/.cargo/registry/src/index.crates.io-6f17d22bba15001f/bitflags-2.3.2/src/external.rs:
