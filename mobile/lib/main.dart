@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 // import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:mobile/providers/stored_links_providers.dart';
 import 'package:mobile/views/home.dart';
@@ -37,11 +36,11 @@ class DoggoShare extends StatelessWidget {
             create: (context) => StoredLinkProvider())
       ],
       child: MaterialApp(
+        theme: ThemeData(fontFamily: "Rubik"),
           debugShowCheckedModeBanner: false,
           home: DefaultTextStyle.merge(
               child: const Home(),
-              style: GoogleFonts.rubik(
-                  textStyle: const TextStyle(fontWeight: FontWeight.bold)))),
+              style: const TextStyle(fontFamily: "assets/fonts/Rubik-VariableFont_wght.ttf"))),
     );
   }
 }

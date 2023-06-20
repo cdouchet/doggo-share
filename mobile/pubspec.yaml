@@ -41,7 +41,7 @@ dependencies:
   cached_network_image: 
   shared_preferences: 
   flutter_secure_storage: 
-  google_fonts: 
+  # google_fonts: 
   file_picker: 
   fluttertoast: 
   provider: 
@@ -92,10 +92,17 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  fonts:
+    - family: Rubik
+      fonts:
+        - asset: fonts/Rubik-VariableFont_wght.ttf
+
   assets:
     - .env
     - assets/
     - assets/images/
+    - google_fonts/
+    - assets/fonts/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
