@@ -1,5 +1,7 @@
-import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobile/api/doggo_api.dart';
 import 'package:mobile/models/request/doggo_multipart.dart';
 import 'package:mobile/providers/stored_links_providers.dart';
@@ -9,7 +11,7 @@ import 'package:mobile/views/success_file.dart';
 import 'package:provider/provider.dart';
 
 class FileSendingLoader extends StatefulWidget {
-  final PlatformFile file;
+  final File file;
   const FileSendingLoader({super.key, required this.file});
 
   @override
@@ -31,7 +33,8 @@ class _FileSendingLoaderState extends State<FileSendingLoader> {
       _isSuccess = null;
     });
     DoggoApi.uploadFile(
-        DoggoMultipart(name: widget.file.name, file: widget.file), (progress) {
+        DoggoMultipart(name: widget.file.path.split('/').last, file: widget.file), (progress) {
+      print("Progress: $progress");
       setState(() {
         _progress = progress;
       });
@@ -46,7 +49,8 @@ class _FileSendingLoaderState extends State<FileSendingLoader> {
         _isSuccess = true;
       });
       LinkStorageService().storeLink(result.success.data);
-      Provider.of<StoredLinkProvider>(context, listen: false).addLink(result.success.data);
+      Provider.of<StoredLinkProvider>(context, listen: false)
+          .addLink(result.success.data);
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -60,6 +64,8 @@ class _FileSendingLoaderState extends State<FileSendingLoader> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          systemOverlayStyle:
+              const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
           elevation: 0,
           shadowColor: Colors.transparent,
           backgroundColor: Colors.transparent,
@@ -80,60 +86,66 @@ class _FileSendingLoaderState extends State<FileSendingLoader> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (_isSuccess == null) ...[
-                  Text("Envoi de ${widget.file.name}",
-                  textAlign: TextAlign.center,
+                  Text("Envoi de ${widget.file.path.split('/').last}",
+                      textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 22)),
-                      const SizedBox(height: 30,),
+                  const SizedBox(
+                    height: 30,
+                  ),
                   CircularProgressIndicator(
-                    value: _progress,
-                    valueColor:
-                        const AlwaysStoppedAnimation(DoggoColors.secondary),
-                  )
+                      value: _progress, color: DoggoColors.secondary),
+                  const SizedBox(height: 15),
+                  Text("${(_progress * 100).round()} %", style: const TextStyle(fontSize: 24))
                 ] else if (_isSuccess == false) ...[
-                  const Text("Une erreur est survenue", textAlign: TextAlign.center, style: TextStyle(fontSize: 28)),
-                  const SizedBox(height: 30,),
+                  const Text("Une erreur est survenue",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 28)),
+                  const SizedBox(
+                    height: 30,
+                  ),
                   Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18),
-                child: ElevatedButton(
-                  onPressed: () {
-                    _sendFile();
-                  },
-                  style: ButtonStyle(
-                    shape: MaterialStatePropertyAll(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(36),
+                    padding: const EdgeInsets.symmetric(horizontal: 18),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _sendFile();
+                      },
+                      style: ButtonStyle(
+                        shape: MaterialStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(36),
+                          ),
+                        ),
+                        elevation: const MaterialStatePropertyAll(0),
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith((states) {
+                          if (states.contains(MaterialState.pressed)) {
+                            return DoggoColors.darkSecondary;
+                          }
+                          return DoggoColors.secondary;
+                        }),
+                        splashFactory: NoSplash.splashFactory,
+                        overlayColor:
+                            const MaterialStatePropertyAll(Colors.transparent),
+                        padding: const MaterialStatePropertyAll(
+                          EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.backup, color: Colors.white),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Réessayer",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 20),
+                          ),
+                        ],
                       ),
                     ),
-                    elevation: const MaterialStatePropertyAll(0),
-                    backgroundColor: MaterialStateProperty.resolveWith((states) {
-                      if (states.contains(MaterialState.pressed)) {
-                        return DoggoColors.darkSecondary;
-                      }
-                      return DoggoColors.secondary;
-                    }),
-                    splashFactory: NoSplash.splashFactory,
-                    overlayColor:
-                        const MaterialStatePropertyAll(Colors.transparent),
-                    padding: const MaterialStatePropertyAll(
-                      EdgeInsets.symmetric(vertical: 18, horizontal: 18),
-                    ),
                   ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.backup, color: Colors.white),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Réessayer",
-                        style:
-                            TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
                 ]
               ],
             ),

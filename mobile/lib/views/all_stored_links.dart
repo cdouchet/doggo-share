@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mobile/components/layout/last_link.dart';
 import 'package:mobile/components/layout/stored_link_search.dart';
 import 'package:mobile/providers/stored_links_providers.dart';
@@ -18,16 +19,21 @@ class _AllStoredLinksViewState extends State<AllStoredLinksView> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<StoredLinkProvider>(context);
-    final sorted = provider.storedLinks.where((element) => element.name
-        .trim()
-        .toLowerCase()
-        .replaceAll(' ', "")
-        .startsWith(textEditingController.text
+    final sorted = provider.storedLinks
+        .where((element) => element.name
             .trim()
             .toLowerCase()
-            .replaceAll(' ', "")));
+            .replaceAll(' ', "")
+            .startsWith(textEditingController.text
+                .trim()
+                .toLowerCase()
+                .replaceAll(' ', "")))
+        .toList()
+        .reversed;
     return Scaffold(
+      backgroundColor: Colors.white,
         appBar: AppBar(
+          systemOverlayStyle: const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
           centerTitle: true,
           title: const Text("Liens récents",
               style: TextStyle(
@@ -55,16 +61,20 @@ class _AllStoredLinksViewState extends State<AllStoredLinksView> {
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: Column(
               children: [
-                const SizedBox(height: 20,),
-                StoredLinkSearch(controller: textEditingController, setState: setState),
+                const SizedBox(
+                  height: 20,
+                ),
+                StoredLinkSearch(
+                    controller: textEditingController, setState: setState),
                 const SizedBox(height: 20),
                 Expanded(
                   child: ListView.separated(
                       itemBuilder: (context, index) {
                         final item = sorted.elementAt(index);
-                        return LastLink(link: item);
+                        return Card(elevation: 0, borderOnForeground: false, color: Colors.transparent, child: LastLink(link: item));
                       },
-                      separatorBuilder: (context, index) => const SizedBox(height: 12),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 12),
                       itemCount: sorted.length),
                 )
               ],

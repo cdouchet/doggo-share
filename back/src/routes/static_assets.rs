@@ -1,6 +1,7 @@
 use actix_web::{HttpResponse, web, HttpRequest};
+use doggo_share_models::handlers::error::DoggoError;
 
-use crate::{handlers::error::DoggoError, utils::CARGO_MANIFEST_DIR};
+use crate::{ utils::CARGO_MANIFEST_DIR};
 
 #[get("/art/{id}")]
 pub async fn get_art<'a>(id: web::Path<String>, req: HttpRequest) -> Result<HttpResponse, DoggoError<'a>> {

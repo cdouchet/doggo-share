@@ -36,4 +36,6 @@ class DoggoFile {
     LinkStorageService().storeLink(this);
     Provider.of<StoredLinkProvider>(context, listen: false).addLink(this);
   }
+
+  String get mimeType => name.split('.').last.toLowerCase();
 }

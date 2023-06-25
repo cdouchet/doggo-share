@@ -18,8 +18,8 @@ use routes::files_routes::{all_files, upload_file};
 use utils::{API_PORT, DATABASE_URL};
 use uuid::Uuid;
 
+use doggo_share_models::doggo_file::DoggoFile;
 use crate::{
-    models::db::file::DoggoFile,
     routes::{files_routes::{
         get_apple_app_site_association, get_asset_links_json, get_file, get_file_info,
     }, static_assets::get_art},
@@ -29,7 +29,7 @@ use crate::{
 extern crate actix_web;
 
 mod db;
-mod handlers;
+// mod handlers;
 mod middlewares;
 mod models;
 mod routes;

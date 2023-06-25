@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/theme/colors.dart';
 import 'package:mobile/views/file_sending_loader.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateDoggoFileView extends StatefulWidget {
   const CreateDoggoFileView({super.key});
@@ -12,7 +16,7 @@ class CreateDoggoFileView extends StatefulWidget {
 }
 
 class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
-  PlatformFile? _selectedFile;
+  File? _selectedFile;
 
   @override
   void initState() {
@@ -25,6 +29,8 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle:
+            const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
         centerTitle: true,
         title: const Text("Envoyer un fichier",
             style: TextStyle(
@@ -55,7 +61,7 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
             Text(
                 _selectedFile == null
                     ? "Sélectionnez un fichier"
-                    : _selectedFile!.path!.split('/').last,
+                    : _selectedFile!.path.split('/').last,
                 style: const TextStyle(fontSize: 28)),
             const SizedBox(
               height: 30,
@@ -63,17 +69,8 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: ElevatedButton(
-                onPressed: () async {
-                  FilePickerResult? result =
-                      await FilePicker.platform.pickFiles(withData: true);
-                  if (result == null) {
-                    return;
-                  }
-                  if (result.isSinglePick) {
-                    setState(() {
-                      _selectedFile = result.files.first;
-                    });
-                  }
+                onPressed: () {
+                  _showDoggoDialog();
                 },
                 style: ButtonStyle(
                   shape: MaterialStatePropertyAll(
@@ -168,5 +165,150 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
         ),
       ),
     );
+  }
+
+
+
+  void _handleIOS(int index) {
+    final ImagePicker picker = ImagePicker();
+    switch (index) {
+      case 0:
+        picker.pickImage(source: ImageSource.gallery).then((value) {
+          if (value != null) {
+            setState(() {
+              _selectedFile = File(value.path);
+            });
+          }
+        });
+        break;
+      case 1:
+        picker.pickImage(source: ImageSource.camera).then((value) {
+          if (value != null) {
+            setState(() {
+              _selectedFile = File(value.path);
+            });
+          }
+        });
+        break;
+      case 2:
+        FilePicker.platform
+            .pickFiles(
+                allowCompression: false, allowMultiple: false, withData: true)
+            .then((value) {
+          if (value != null) {
+            setState(() {
+              _selectedFile = File(value.files.first.path!);
+            });
+          }
+        });
+    }
+  }
+
+  void _handleAndroid(int index) {
+    final ImagePicker picker = ImagePicker();
+    switch (index) {
+      case 0:
+        FilePicker.platform
+            .pickFiles(
+                allowCompression: false, allowMultiple: false, withData: true)
+            .then((value) {
+          if (value != null) {
+            setState(() {
+              _selectedFile = File(value.files.first.path!);
+            });
+          }
+        });
+        break;
+      case 1:
+        picker.pickImage(source: ImageSource.camera).then((value) {
+          if (value != null) {
+            setState(() {
+            _selectedFile = File(value.path);
+            });
+          }
+        });
+    }
+  }
+
+  void _handleWeb() {
+    final file = FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      allowCompression: false,
+      dialogTitle: "Choisissez un fichier",
+      withData: true,
+    ).then((value)  {
+      if (value != null) {
+        setState(() {
+          _selectedFile = File(value.files.first.path!);
+        });
+      }
+    });
+  }
+
+  Widget _bottomModalItem(IconData icon, String title, int index) {
+    return GestureDetector(
+      onTap: () {
+        if (kIsWeb) {
+          _handleWeb();
+          return;
+        }
+        if (Platform.isIOS) {
+          _handleIOS(index);
+          return;
+        }
+        _handleAndroid(index);
+      },
+      child: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: Colors.white),
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(icon, color: DoggoColors.secondary, size: 32),
+            Text(title, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w600), textDirection: TextDirection.rtl)
+          ],
+        ),
+      ),
+    );
+  }
+
+  _showDoggoDialog() {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+        context: context,
+        isScrollControlled: true,
+        builder: (context) {
+          return Container(
+              color: Colors.transparent,
+              padding: const EdgeInsets.all(18),
+              child: Wrap(
+                children: [
+                  Column(children: [
+                    if (Platform.isIOS) ...[
+                      _bottomModalItem(Icons.photo_library, "Choisir une image", 0),
+                      const SizedBox(height: 10),
+                      _bottomModalItem(Icons.camera_alt, "Prendre une photo", 1),
+                      const SizedBox(height: 10),
+                      _bottomModalItem(Icons.file_copy, "Choisir un fichier", 2),
+                    ] else ...[
+                      _bottomModalItem(Icons.file_copy, "Choisir un fichier", 0),
+                      const SizedBox(height: 10),
+                      _bottomModalItem(Icons.camera_alt, "Prendre une photo", 1),
+                    ],
+                    const SizedBox(height: 30,),
+                  ]),
+                ],
+              ));
+        });
+    // FilePickerResult? result =
+    //                   await FilePicker.platform.pickFiles(withData: true);
+    //               if (result == null) {
+    //                 return;
+    //               }
+    //               if (result.isSinglePick) {
+    //                 setState(() {
+    //                   _selectedFile = result.files.first;
+    //                 });
+    //               }
   }
 }

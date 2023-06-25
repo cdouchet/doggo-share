@@ -174,11 +174,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       Provider.of<StoredLinkProvider>(context,
                                               listen: true)
                                           .storedLinks);
+                                  links = links.toList().reversed;
                                 }
                                 return Container(
                                   width: double.maxFinite,
                                   padding: const EdgeInsets.all(18),
                                   child: ListView.separated(
+                                      physics: const NeverScrollableScrollPhysics(),
                                       itemBuilder: (context, index) {
                                         return LastLink(
                                             link: links.elementAt(index));
@@ -188,7 +190,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       itemCount: links.length),
                                 );
                               }),
-                        )
+                        ),
                     ],
                   )),
               Align(

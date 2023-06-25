@@ -1,8 +1,9 @@
-import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+
 
 class DoggoMultipart {
   final String name;
-  final PlatformFile file;
+  final File file;
 
   DoggoMultipart({
     required this.name,
