@@ -1,26 +1,41 @@
-use std::{fs::{self}, sync::{Arc, Mutex, mpsc::channel}};
+use std::{
+    fs::{self},
+    sync::{mpsc::channel, Arc, Mutex},
+};
 
-use actix_web::{web, App, HttpServer};
-use db::Pool;
-use diesel::{r2d2::ConnectionManager, PgConnection, QueryDsl, ExpressionMethods, RunQueryDsl};
-use dotenvy::dotenv;
-use routes::files_routes::{upload_file, all_files};
-use utils::{API_PORT, DATABASE_URL};
+use actix_multipart::form::MultipartFormConfig;
+use actix_cors::Cors;
+use actix_web::{
+    dev::AppConfig,
+    web::{self, PayloadConfig},
+    App, HttpServer,
+};
 use chrono::Duration;
+use db::Pool;
+use diesel::{r2d2::ConnectionManager, ExpressionMethods, PgConnection, QueryDsl, RunQueryDsl};
+use dotenvy::dotenv;
+use routes::files_routes::{all_files, upload_file};
+use utils::{API_PORT, DATABASE_URL};
 use uuid::Uuid;
 
-use crate::{routes::files_routes::{get_file, get_apple_app_site_association, get_file_info}, models::db::file::DoggoFile};
+use crate::{
+    models::db::file::DoggoFile,
+    routes::{files_routes::{
+        get_apple_app_site_association, get_asset_links_json, get_file, get_file_info,
+    }, static_assets::get_art},
+};
 
 #[macro_use]
 extern crate actix_web;
 
 mod db;
 mod handlers;
+mod middlewares;
 mod models;
 mod routes;
 mod schema;
-mod utils;
 mod services;
+mod utils;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -31,13 +46,29 @@ async fn main() -> std::io::Result<()> {
         .expect("Failed to create DB pool");
     let cloned_pool = pool.clone();
     let server = HttpServer::new(move || {
+        let config = MultipartFormConfig::default()
+            .total_limit(1000 * 1024 * 1024)
+            .memory_limit(1000 * 1024 * 1024);
+        let cors = Cors::default().allow_any_origin().allowed_methods(vec!["GET", "POST", "OPTIONS"]);
         App::new()
+            .wrap(cors)
+            .app_data(web::Data::new(config))
+            .app_data(web::PayloadConfig::new(1024 * 1024 * 1024).limit(1024 * 1024 * 1024))
             .app_data(web::Data::new(pool.clone()))
+            // .service(actix_files::Files::new(
+            //     "/",
+            //     "/home/cyril/Documents/github/doggo-share-2/",
+            // ))
             .service(upload_file)
-            .service(all_files)
             .service(get_file)
-		.service(get_apple_app_site_association)
-		.service(get_file_info)
+            //.service(all_files)
+            .service(get_apple_app_site_association)
+            .service(get_file_info)
+            .service(get_art)
+            .route(
+                "/.well-known/assetlinks.json",
+                web::get().to(get_asset_links_json),
+            )
     })
     .bind((
         "0.0.0.0",
@@ -60,7 +91,9 @@ async fn main() -> std::io::Result<()> {
             {
                 Err(err) => {
                     eprintln!("Error filtering trashes : {err}");
-                    cloned_sender.send(()).expect("Fatal: Could not stop trash collector");
+                    cloned_sender
+                        .send(())
+                        .expect("Fatal: Could not stop trash collector");
                 }
                 Ok(trashes) => {
                     for t in &trashes {
@@ -90,8 +123,17 @@ async fn main() -> std::io::Result<()> {
 
     // })
 
-    println!("Launching Doggo Share Server on http://localhost:{}", *API_PORT);
-    server.run().await.expect("Could not start HTTP Server");
-    stop_sender.send(()).expect("Could not stop trash collector");
+    println!(
+        "Launching Doggo Share Server on http://localhost:{}",
+        *API_PORT
+    );
+    let server_start_res = server.run().await;
+    if let Err(err) = server_start_res {
+        eprintln!("Error starting HTTP server : {err}");
+        panic!("Error starting server");
+    }
+    stop_sender
+        .send(())
+        .expect("Could not stop trash collector");
     Ok(())
 }
