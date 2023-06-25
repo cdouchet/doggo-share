@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/theme/colors.dart';
@@ -221,14 +222,36 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
       case 1:
         picker.pickImage(source: ImageSource.camera).then((value) {
           if (value != null) {
+            setState(() {
             _selectedFile = File(value.path);
+            });
           }
         });
     }
   }
+
+  void _handleWeb() {
+    final file = FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      allowCompression: false,
+      dialogTitle: "Choisissez un fichier",
+      withData: true,
+    ).then((value)  {
+      if (value != null) {
+        setState(() {
+          _selectedFile = File(value.files.first.path!);
+        });
+      }
+    });
+  }
+
   Widget _bottomModalItem(IconData icon, String title, int index) {
     return GestureDetector(
       onTap: () {
+        if (kIsWeb) {
+          _handleWeb();
+          return;
+        }
         if (Platform.isIOS) {
           _handleIOS(index);
           return;

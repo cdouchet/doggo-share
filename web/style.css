@@ -1,0 +1,12 @@
+.input-button {
+    background-color: blue;
+    color: red;
+}
+
+#home {
+    padding: 0;
+    margin: 0;
+    width: max-content;
+    height: max-content;
+    background-color: blue;
+}

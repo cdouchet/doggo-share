@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:floating_snackbar/floating_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -153,9 +152,9 @@ class _FilePreviewState extends State<FilePreview> {
 
   Future<Widget> _handleFileType() async {
     if (_isImage()) {
-      return CachedNetworkImage(
-        imageUrl: widget.file.url,
-        errorWidget: (_, __, ___) => Center(child: _noPreview()),
+      return Image.network(
+        widget.file.url,
+        errorBuilder: (_, __, ___) => Center(child: _noPreview()),
       );
     }
     if (_isPDF()) {

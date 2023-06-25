@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/models/response/doggo_file.dart';
 import 'package:mobile/providers/stored_links_providers.dart';
@@ -6,6 +6,7 @@ import 'package:mobile/services/link_storage_service.dart';
 import 'package:mobile/theme/colors.dart';
 import 'package:mobile/views/file_preview.dart';
 import 'package:provider/provider.dart';
+import 'package:universal_html/html.dart' as html;
 
 class LastLink extends StatelessWidget {
   final DoggoFile link;
@@ -31,6 +32,10 @@ class LastLink extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
+        if (kIsWeb) {
+          html.window.open(link.url, "new tab");
+          return;
+        }
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => FilePreview(file: link)));
       },
@@ -49,7 +54,7 @@ class LastLink extends StatelessWidget {
               image: _getMime() == "image"
                   ? DecorationImage(
                       fit: BoxFit.cover,
-                      image: CachedNetworkImageProvider(link.url))
+                      image: NetworkImage(link.url))
                   : null),
           height: 45,
           width: 45,

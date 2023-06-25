@@ -1,24 +1,11 @@
-use actix_web::{error, HttpResponse, http::header::ContentType};
 use derive_more::Display;
-use reqwest::StatusCode;
+use reqwest_wasm::StatusCode;
 
 #[derive(Display, Debug)]
 #[display(fmt = r#"{{"name": {}, "status_code": {}}}"#, name, status_code)]
 pub struct DoggoError<'a> {
     name: &'a str,
     status_code: StatusCode,
-}
-
-impl error::ResponseError for DoggoError<'_> {
-    fn error_response(&self) -> HttpResponse {
-        HttpResponse::build(self.status_code)
-            .insert_header(ContentType::json())
-            .body(self.to_string())
-    }
-
-    fn status_code(&self) -> StatusCode {
-        self.status_code
-    }
 }
 
 impl<'a> DoggoError<'a> {

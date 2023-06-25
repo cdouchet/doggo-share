@@ -1,12 +1,12 @@
 use chrono::{DateTime, Local};
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 use uuid::Uuid;
 
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct DoggoFile {
     created_at: Option<DateTime<Local>>,
     updated_at: Option<DateTime<Local>>,
     pub id: Uuid,
-    net_url: String,
-    name: String,
+    pub net_url: String,
+    pub name: String,
 }

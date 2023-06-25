@@ -8,15 +8,18 @@ use actix_web::{web::{self, Data, Json}, HttpResponse, HttpRequest};
 use diesel::{
     query_dsl::methods::FilterDsl, BoolExpressionMethods, ExpressionMethods, RunQueryDsl,
 };
+<<<<<<< HEAD
+=======
+use doggo_share_models::{doggo_file::{DoggoFile}, handlers::error::DoggoError};
+use serde::Deserialize;
+>>>>>>> origin/fix/uni_links
 use uuid::Uuid;
 
 use crate::{
     db::Pool,
-    handlers::error::DoggoError,
     models::{
-        db::file::{DoggoFile, NewDoggoFile},
         form::UploadMultipart,
-        response::DoggoResponse,
+        response::{DoggoResponse, file::NewDoggoFile},
     },
     utils::{BASE_URL, CARGO_MANIFEST_DIR},
 };
