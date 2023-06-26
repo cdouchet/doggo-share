@@ -1,3 +1,5 @@
+![alt text](https://bordel.doggo-saloon.net/logo-transparent.png "Doggo Share Logo")
+
 # Doggo Share
 
 Doggo Share is a file sharing platform, written entirely in rust with [actix-web](https://github.com/actix/actix-web) as server and [leptos](https://github.com/leptos-rs/leptos) in front.
