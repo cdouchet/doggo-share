@@ -1,6 +1,6 @@
 # Doggo Share
 
-Doggo Share is a file sharing platform, written entirely in rust with [actix-web]("https://github.com/actix/actix-web") as server and [leptos]("https://github.com/leptos-rs/leptos") in front.
+Doggo Share is a file sharing platform, written entirely in rust with [actix-web](https://github.com/actix/actix-web) as server and [leptos](https://github.com/leptos-rs/leptos) in front.
 
 Add a file, send it and share the generated link !
 
@@ -12,7 +12,7 @@ You will need to install rust and cargo. On Linux and MacOS systems :
 curl https://sh.rustup.rs -sSf | sh
 ```
 
-If you want to build the mobile app, you need to install flutter [here]("https://docs.flutter.dev/get-started/install").
+If you want to build the mobile app, you need to install flutter [here](https://docs.flutter.dev/get-started/install).
 
 ## Installation
 
