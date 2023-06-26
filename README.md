@@ -1,4 +1,4 @@
-![alt text](https://bordel.doggo-saloon.net/logo-transparent.png "Doggo Share Logo")
+<div style="text-align:center"><img src="https://bordel.doggo-saloon.net/logo-transparent.png" /></div>
 
 # Doggo Share
 
