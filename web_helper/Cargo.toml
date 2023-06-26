@@ -14,6 +14,7 @@ chrono = { version = "0.4.23", features = ["serde"] }
 derive_more = "0.99.17"
 lazy_static = "1.4.0"
 serde_json = "1"
+dotenvy = "0.15.7"
 
 [dependencies.gloo]
 version = "0.8.1"

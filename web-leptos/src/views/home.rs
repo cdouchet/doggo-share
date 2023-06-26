@@ -19,6 +19,7 @@ use crate::{
 pub fn Home(cx: Scope) -> impl IntoView {
     // let home2 = document().get_element_by_id("home-2").unwrap().dyn_ref::<HtmlElement>().expect("error ").style();
     let random_number = rand::thread_rng().gen_range(0..4);
+
     // document()
     //     .get_element_by_id("home-2")
     //     .unwrap()

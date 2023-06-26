@@ -57,8 +57,10 @@ cargo install cargo-leptos
 And serve the front as a server :
 ```bash
 cd web-leptos
-cargo leptos watch
+BASE_URL=http://localhost:444 cargo leptos watch
 ```
+
+Where BASE_URL is the url of the API.
 
 If you want to change the port of this server, you can modify the Cargo.toml file, and edit the site-addr variable.
 

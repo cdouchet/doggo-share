@@ -24,7 +24,7 @@ pub async fn get_file_info<'a>(id: &'a str) -> Result<DoggoResponse<DoggoFile>, 
     };
     let client = &HTTP_CLIENT;
     let request = client.get(format!(
-        "http://doggo-share.doggo-saloon.net/file/info/{id}"
+        "{}/file/info/{id}", std::env!("BASE_URL")
     ));
     let response = request.send().await;
     let response = match response {
@@ -82,7 +82,7 @@ pub async fn post_file(
     //     );
     // let boundary = form_data.boundary().clone();
     let response = client
-        .post("https://doggo-share.doggo-saloon.net/files")
+        .post(format!("{}/files", std::env!("BASE_URL")))
         .multipart(form_data)
         // .header("Accept", "*/*")
         // .header("Accept-Encoding", "gzip, deflate, br")
