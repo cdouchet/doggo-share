@@ -1,3 +1,4 @@
+use dotenvy::dotenv;
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
@@ -8,6 +9,7 @@ use crate::views::home::Home;
 pub fn App(cx: Scope) -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context(cx);
+    dotenv().ok();
 
     view! {
         cx,

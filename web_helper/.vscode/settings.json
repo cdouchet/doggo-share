@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.cargo.extraEnv": {
+        "BASE_URL": "https://doggo-share.doggo-saloon.net"
+    }
+}

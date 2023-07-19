@@ -30,6 +30,7 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1"
 reqwest-wasm = { version = "0.11.14", features = ["json", "gzip"] }
 rand = "0.8.5"
+dotenvy = "0.15.7"
 
 # reqwest = { version = "0.11.14", features = ["json", "gzip"] }
 
