@@ -11,7 +11,19 @@ class StoredLinkProvider extends ChangeNotifier {
   void setLinks() async {
     final l = await storage.getAllLinksUnchecked();
     _storedLinks = l.toList();
+    _removeExpiredLinks();
     notifyListeners();
+  }
+
+  _removeExpiredLinks() {
+    DateTime now = DateTime.now();
+    for (DoggoFile file in _storedLinks) {
+      DateTime timestamp = DateTime.parse(file.createdAt);
+      timestamp.add(const Duration(days: 5));
+      if (now.compareTo(timestamp) > 0) {
+        storage.deleteLink(file);
+      }
+    }
   }
 
   void addLink(DoggoFile link) {

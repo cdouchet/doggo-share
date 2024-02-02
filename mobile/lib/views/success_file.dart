@@ -43,9 +43,12 @@ class _SuccessFileState extends State<SuccessFile> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Spacer(),
-                Text("Votre lien pour ${widget.file.name} est prêt",
-                textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 28)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Text("Votre lien pour ${widget.file.name} est prêt",
+                  textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 28)),
+                ),
                 const SizedBox(
                   height: 30,
                 ),
