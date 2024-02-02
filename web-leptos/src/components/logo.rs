@@ -5,6 +5,6 @@ use web_sys::MouseEvent;
 pub fn Logo<T>(cx: Scope, onclick: T) -> impl IntoView where T: Fn(MouseEvent) -> () + 'static {
     view! {
         cx,
-        <img on:click=onclick class="logo" src="https://bordel.doggo-saloon.net/logo-transparent.png" />
+        <img on:click=onclick class="logo" src="https://doggo-share-api.doggo-saloon.net/assets/logo-icon.png" />
     }
 }
