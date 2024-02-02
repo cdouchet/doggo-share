@@ -1,4 +1,4 @@
-<div style="text-align:center"><img src="https://bordel.doggo-saloon.net/logo-transparent.png" /></div>
+<div style="text-align:center"><img src="https://doggo-share-api.doggo-saloon.net/assets/logo-icon.png" /></div>
 
 # Doggo Share
 

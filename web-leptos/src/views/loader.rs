@@ -28,7 +28,7 @@ where
                 .unwrap()
                 .get(0)
                 .unwrap();
-            let res = doggo_share_web_helper::api::post_file(gloo::file::File::from(file)).await;
+            let res = doggo_share_web_helper::api::post_file(file.into()).await;
             res
         },
     );

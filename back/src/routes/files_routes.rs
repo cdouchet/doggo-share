@@ -57,6 +57,20 @@ pub async fn get_apple_app_site_association<'b>(
     return Ok(file.into_response(&req));
 }
 
+
+#[get("/assets/{name}")]
+pub async fn get_asset<'b>(
+    name: web::Path<String>,
+    req: HttpRequest
+) -> Result<HttpResponse, DoggoError<'b>> {
+    let name = name.into_inner();
+    let file = match actix_files::NamedFile::open_async(format!("{}/art/{}", *CARGO_MANIFEST_DIR, name)).await {
+        Ok(r) => r,
+        Err(err) => return Err(DoggoError::not_found())
+    };
+    Ok(file.into_response(&req))
+}
+
 #[get("/file/info/{id}")]
 pub async fn get_file_info<'a, 'b>(
     path: web::Path<String>,
