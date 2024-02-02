@@ -3,8 +3,8 @@ use std::{
     sync::{mpsc::channel, Arc, Mutex},
 };
 
-use actix_multipart::form::MultipartFormConfig;
 use actix_cors::Cors;
+use actix_multipart::form::MultipartFormConfig;
 use actix_web::{
     dev::AppConfig,
     web::{self, PayloadConfig},
@@ -18,12 +18,17 @@ use routes::files_routes::{all_files, upload_file};
 use utils::{API_PORT, DATABASE_URL};
 use uuid::Uuid;
 
-use doggo_share_models::doggo_file::DoggoFile;
 use crate::{
-    routes::{files_routes::{
-        get_apple_app_site_association, get_asset_links_json, get_file, get_file_info,
-    }, static_assets::get_art},
+    routes::{
+        files_routes::{
+            get_apple_app_site_association, get_asset, get_asset_links_json, get_file,
+            get_file_info,
+        },
+        static_assets::get_art,
+    },
+    utils::{CARGO_MANIFEST_DIR, DOGGO_SHARE_CORS_ALLOWED_ORIGIN},
 };
+use doggo_share_models::doggo_file::DoggoFile;
 
 #[macro_use]
 extern crate actix_web;
@@ -45,11 +50,16 @@ async fn main() -> std::io::Result<()> {
         .build(manager)
         .expect("Failed to create DB pool");
     let cloned_pool = pool.clone();
+    if let Err(err) = std::fs::create_dir(format!("{}/files", *CARGO_MANIFEST_DIR)) {
+        eprintln!("Creating Files Directory: {}", err);
+    }
     let server = HttpServer::new(move || {
         let config = MultipartFormConfig::default()
-            .total_limit(1000 * 1024 * 1024)
-            .memory_limit(1000 * 1024 * 1024);
-        let cors = Cors::default().allow_any_origin().allowed_methods(vec!["GET", "POST", "OPTIONS"]);
+            .total_limit(100 * 1024 * 1024 * 1024)
+            .memory_limit(100 * 1024 * 1024 * 1024);
+        let cors = Cors::default()
+            .allowed_origin(&DOGGO_SHARE_CORS_ALLOWED_ORIGIN)
+            .allowed_methods(vec!["GET", "POST", "OPTIONS"]);
         App::new()
             .wrap(cors)
             .app_data(web::Data::new(config))
@@ -65,6 +75,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_apple_app_site_association)
             .service(get_file_info)
             .service(get_art)
+            .service(get_asset)
             .route(
                 "/.well-known/assetlinks.json",
                 web::get().to(get_asset_links_json),
