@@ -1,4 +1,4 @@
-<div style="text-align:center"><img src="https://doggo-share-api.doggo-saloon.net/logo-icon.png" /></div>
+<div style="text-align:center"><img src="https://doggo-share-api.doggo-saloon.net/assets/logo-no-background.png" /></div>
 
 # Doggo Share
 
