@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>mobile</string>
+	<string>doggo-share</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -32,18 +32,16 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
-	<key>io.flutter.embedded_views_preview</key>
-	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Autorisez l'accès à Apple Music pour partager vos musiques sur Doggo Share</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Autorisez l'accès à votre caméra pour partager une photo</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Autorisez l'accès à votre microphone pour partager une vidéo</string>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Autorisez l&apos;accès à Apple Music pour partager vos musiques sur Doggo Share</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Autorisez l&apos;accès à vos photos pour les partager sur Doggo Share</string>
+	<string>Autorisez l'accès à vos photos pour les partager sur Doggo Share</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -58,6 +56,8 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIStatusBarHidden</key>
+	<false/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -75,7 +75,7 @@
 	<true/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>UIStatusBarHidden</key>
-	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 </dict>
 </plist>

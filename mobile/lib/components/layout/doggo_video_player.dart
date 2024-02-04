@@ -19,7 +19,7 @@ class _DoggoVideoPlayerState extends State<DoggoVideoPlayer> {
         const BetterPlayerConfiguration(
             controlsConfiguration: BetterPlayerControlsConfiguration(
                 enableAudioTracks: false,
-                enableFullscreen: false,
+                enableFullscreen: true,
                 enableMute: true,
                 enableOverflowMenu: false,
                 enablePip: false,
@@ -27,7 +27,7 @@ class _DoggoVideoPlayerState extends State<DoggoVideoPlayer> {
                 enablePlaybackSpeed: false,
                 enableProgressBar: true,
                 enableProgressBarDrag: true,
-                enableProgressText: false,
+                enableProgressText: true,
                 enableQualities: true,
                 enableRetry: true,
                 enableSkips: false,
