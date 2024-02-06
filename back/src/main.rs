@@ -24,7 +24,7 @@ use crate::{
             get_apple_app_site_association, get_asset, get_asset_links_json, get_file,
             get_file_info,
         },
-        static_assets::get_art,
+        static_assets::get_art, support_routes::post_support_form,
     },
     utils::{CARGO_MANIFEST_DIR, DOGGO_SHARE_CORS_ALLOWED_ORIGIN},
 };
@@ -76,6 +76,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_file_info)
             .service(get_art)
             .service(get_asset)
+            .service(post_support_form)
             .route(
                 "/.well-known/assetlinks.json",
                 web::get().to(get_asset_links_json),

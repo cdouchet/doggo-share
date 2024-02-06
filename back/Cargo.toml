@@ -27,3 +27,7 @@ futures-util = "0.3.28"
 actix-cors = "0.6.4"
 
 doggo-share-models = { path = "../models" }
+
+[lib]
+name = "back"
+path = "src/lib.rs"

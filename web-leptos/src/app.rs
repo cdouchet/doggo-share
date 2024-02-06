@@ -3,7 +3,7 @@ use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
 
-use crate::views::home::Home;
+use crate::views::{home::Home, privacy::Privacy};
 
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
@@ -26,6 +26,7 @@ pub fn App(cx: Scope) -> impl IntoView {
             <main>
                 <Routes>
                     <Route path="/" view=|cx| view! { cx, <Home/> }/>
+                    <Route path="/privacy" view=|cx| view! { cx, <Privacy /> } />
                 </Routes>
             </main>
         </Router>

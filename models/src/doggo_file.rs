@@ -1,4 +1,4 @@
-use crate::{Pool, handlers::error::DoggoError, schema::files};
+use crate::{handlers::error::DoggoError, schema::files, Pool};
 use actix_web::web::Data;
 use chrono::{DateTime, Local};
 use diesel::{Insertable, Queryable, RunQueryDsl};

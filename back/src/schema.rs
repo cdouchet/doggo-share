@@ -10,3 +10,19 @@ diesel::table! {
         name -> Text,
     }
 }
+
+diesel::table! {
+    support_posts (id) {
+        id -> Int4,
+        created_at -> Timestamptz,
+        updated_at -> Timestamptz,
+        title -> Text,
+        comment -> Text,
+        email -> Text,
+    }
+}
+
+diesel::allow_tables_to_appear_in_same_query!(
+    files,
+    support_posts,
+);
