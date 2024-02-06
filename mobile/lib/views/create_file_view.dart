@@ -25,6 +25,26 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
         const SystemUiOverlayStyle(statusBarBrightness: Brightness.light));
   }
 
+  String _getMime() {
+    if (_selectedFile == null) {
+      throw Exception("Selected File must not be null");
+    }
+    if (_selectedFile!.path.toLowerCase().endsWith(".png") ||
+        _selectedFile!.path.toLowerCase().endsWith(".jpg") ||
+        _selectedFile!.path.toLowerCase().endsWith(".jpeg") ||
+        _selectedFile!.path.toLowerCase().endsWith(".bmp") ||
+        _selectedFile!.path.toLowerCase().endsWith(".ico") ||
+        _selectedFile!.path.toLowerCase().endsWith(".webp") ||
+        _selectedFile!.path.toLowerCase().endsWith(".gif")) {
+      return "image";
+    }
+    final splitted = _selectedFile!.path.split('.');
+    if (splitted.last.length > 5) {
+      return "FILE";
+    }
+    return splitted.last.toUpperCase();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,11 +78,19 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
             //   height: 70,
             // ),
             const Spacer(),
-            Text(
-                _selectedFile == null
-                    ? "Sélectionnez un fichier"
-                    : _selectedFile!.path.split('/').last,
-                style: const TextStyle(fontSize: 28)),
+            Flexible(
+              flex: 4,
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: _selectedFile == null
+                      ? const Text("Sélectionnez un fichier",
+                          style: TextStyle(fontSize: 28))
+                      : _getMime() == "image"
+                          ? Image.file(File(_selectedFile!.path),
+                              fit: BoxFit.cover)
+                          : Text(_selectedFile!.path.split('/').last,
+                              style: const TextStyle(fontSize: 28))),
+            ),
             const SizedBox(
               height: 30,
             ),
@@ -167,8 +195,6 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
     );
   }
 
-
-
   void _handleIOS(int index) {
     final ImagePicker picker = ImagePicker();
     switch (index) {
@@ -202,6 +228,7 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
           }
         });
     }
+    Navigator.pop(context);
   }
 
   void _handleAndroid(int index) {
@@ -223,20 +250,23 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
         picker.pickImage(source: ImageSource.camera).then((value) {
           if (value != null) {
             setState(() {
-            _selectedFile = File(value.path);
+              _selectedFile = File(value.path);
             });
           }
         });
     }
+    Navigator.pop(context);
   }
 
   void _handleWeb() {
-    final file = FilePicker.platform.pickFiles(
+    final file = FilePicker.platform
+        .pickFiles(
       allowMultiple: false,
       allowCompression: false,
       dialogTitle: "Choisissez un fichier",
       withData: true,
-    ).then((value)  {
+    )
+        .then((value) {
       if (value != null) {
         setState(() {
           _selectedFile = File(value.files.first.path!);
@@ -259,13 +289,22 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
         _handleAndroid(index);
       },
       child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: Colors.white),
+        decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(18)),
+            color: Colors.white),
         padding: const EdgeInsets.all(12),
+        margin: const EdgeInsets.symmetric(horizontal: 36),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Icon(icon, color: DoggoColors.secondary, size: 32),
-            Text(title, style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w600), textDirection: TextDirection.rtl)
+            const SizedBox(
+              width: 20,
+            ),
+            Text(title,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                textDirection: TextDirection.rtl)
           ],
         ),
       ),
@@ -274,28 +313,36 @@ class _CreateDoggoFileViewState extends State<CreateDoggoFileView> {
 
   _showDoggoDialog() {
     showModalBottomSheet(
-      backgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         context: context,
         isScrollControlled: true,
         builder: (context) {
           return Container(
               color: Colors.transparent,
-              padding: const EdgeInsets.all(18),
+              padding: const EdgeInsets.only(bottom: 24),
+              // padding: const EdgeInsets.all(18),
               child: Wrap(
                 children: [
                   Column(children: [
                     if (Platform.isIOS) ...[
-                      _bottomModalItem(Icons.photo_library, "Choisir une image", 0),
+                      _bottomModalItem(
+                          Icons.photo_library, "Choisir une image", 0),
                       const SizedBox(height: 10),
-                      _bottomModalItem(Icons.camera_alt, "Prendre une photo", 1),
+                      _bottomModalItem(
+                          Icons.camera_alt, "Prendre une photo", 1),
                       const SizedBox(height: 10),
-                      _bottomModalItem(Icons.file_copy, "Choisir un fichier", 2),
+                      _bottomModalItem(
+                          Icons.file_copy, "Choisir un fichier", 2),
                     ] else ...[
-                      _bottomModalItem(Icons.file_copy, "Choisir un fichier", 0),
+                      _bottomModalItem(
+                          Icons.file_copy, "Choisir un fichier", 0),
                       const SizedBox(height: 10),
-                      _bottomModalItem(Icons.camera_alt, "Prendre une photo", 1),
+                      _bottomModalItem(
+                          Icons.camera_alt, "Prendre une photo", 1),
                     ],
-                    const SizedBox(height: 30,),
+                    const SizedBox(
+                      height: 30,
+                    ),
                   ]),
                 ],
               ));

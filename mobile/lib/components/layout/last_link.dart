@@ -67,7 +67,7 @@ class LastLink extends StatelessWidget {
         ),
       ),
       trailing: IconButton(
-        icon: const Icon(Icons.remove, color: DoggoColors.secondary),
+        icon: const Icon(Icons.delete, color: DoggoColors.secondary),
         onPressed: () {
           Provider.of<StoredLinkProvider>(context, listen: false)
               .removeLink(link);

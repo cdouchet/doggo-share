@@ -104,6 +104,7 @@ class _FilePreviewState extends State<FilePreview> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Spacer(),
             Expanded(
                 child: FutureBuilder(
               future: _handleFileType(),
@@ -115,6 +116,7 @@ class _FilePreviewState extends State<FilePreview> {
                     child: CircularProgressIndicator.adaptive());
               },
             )),
+            const Spacer()
           ],
         ),
       )),
@@ -131,7 +133,7 @@ class _FilePreviewState extends State<FilePreview> {
   }
 
   bool _isAudio() {
-    return ["aac", "mid", "midi", "oga", "wav", "weba"]
+    return ["aac", "mid", "midi", "oga", "wav", "weba", "mp3"]
         .contains(widget.file.mimeType);
   }
 
@@ -171,8 +173,8 @@ class _FilePreviewState extends State<FilePreview> {
     }
     if (_isDoc()) {
       final bytes = (await get(Uri.parse(widget.file.url))).bodyBytes;
-      final file =
-          File("${(await getTemporaryDirectory()).path}/${widget.file.id}-${widget.file.name}");
+      final file = File(
+          "${(await getTemporaryDirectory()).path}/${widget.file.id}-${widget.file.name}");
       if (!(await file.exists())) {
         await file.create();
         await file.writeAsBytes(bytes);
@@ -181,7 +183,7 @@ class _FilePreviewState extends State<FilePreview> {
         filePath: file.path,
         loadingWidget:
             const Center(child: CircularProgressIndicator.adaptive()),
-            unSupportFileWidget: _noPreview(),
+        unSupportFileWidget: _noPreview(),
       );
     }
     if (_isVideo()) {

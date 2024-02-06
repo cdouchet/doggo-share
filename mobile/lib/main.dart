@@ -36,7 +36,7 @@ class DoggoShare extends StatelessWidget {
             create: (context) => StoredLinkProvider())
       ],
       child: MaterialApp(
-        theme: ThemeData(fontFamily: "Rubik"),
+        theme: ThemeData(fontFamily: "Rubik", useMaterial3: false),
           debugShowCheckedModeBanner: false,
           home: DefaultTextStyle.merge(
               child: const Home(),
