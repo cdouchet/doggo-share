@@ -5,13 +5,14 @@ use std::{
 
 use actix_multipart::form::MultipartForm;
 use actix_web::{
+    http::header::{ContentDisposition, DispositionParam, DispositionType},
     web::{self, Data, Json},
     HttpRequest, HttpResponse,
 };
 use diesel::{
     query_dsl::methods::FilterDsl, BoolExpressionMethods, ExpressionMethods, RunQueryDsl,
 };
-use doggo_share_models::{doggo_file::{DoggoFile}, handlers::error::DoggoError};
+use doggo_share_models::{doggo_file::DoggoFile, handlers::error::DoggoError};
 use serde::Deserialize;
 use uuid::Uuid;
 
@@ -19,15 +20,16 @@ use crate::{
     db::Pool,
     models::{
         form::UploadMultipart,
-        response::{DoggoResponse, file::NewDoggoFile},
+        response::{file::NewDoggoFile, DoggoResponse},
     },
     utils::{BASE_URL, CARGO_MANIFEST_DIR},
 };
 
 pub async fn get_asset_links_json<'b>(req: HttpRequest) -> Result<HttpResponse, DoggoError<'b>> {
-    let file = match actix_files::NamedFile::open_async(
-        format!("{}/../assetlinks.json", *CARGO_MANIFEST_DIR),
-    )
+    let file = match actix_files::NamedFile::open_async(format!(
+        "{}/../assetlinks.json",
+        *CARGO_MANIFEST_DIR
+    ))
     .await
     {
         Ok(r) => r,
@@ -43,9 +45,10 @@ pub async fn get_asset_links_json<'b>(req: HttpRequest) -> Result<HttpResponse, 
 pub async fn get_apple_app_site_association<'b>(
     req: HttpRequest,
 ) -> Result<HttpResponse, DoggoError<'b>> {
-    let file = match actix_files::NamedFile::open_async(
-        format!("{}/../apple-app-site-association", *CARGO_MANIFEST_DIR),
-    )
+    let file = match actix_files::NamedFile::open_async(format!(
+        "{}/../apple-app-site-association",
+        *CARGO_MANIFEST_DIR
+    ))
     .await
     {
         Ok(r) => r,
@@ -57,17 +60,19 @@ pub async fn get_apple_app_site_association<'b>(
     return Ok(file.into_response(&req));
 }
 
-
 #[get("/assets/{name}")]
 pub async fn get_asset<'b>(
     name: web::Path<String>,
-    req: HttpRequest
+    req: HttpRequest,
 ) -> Result<HttpResponse, DoggoError<'b>> {
     let name = name.into_inner();
-    let file = match actix_files::NamedFile::open_async(format!("{}/art/{}", *CARGO_MANIFEST_DIR, name)).await {
-        Ok(r) => r,
-        Err(err) => return Err(DoggoError::not_found())
-    };
+    let file =
+        match actix_files::NamedFile::open_async(format!("{}/art/{}", *CARGO_MANIFEST_DIR, name))
+            .await
+        {
+            Ok(r) => r,
+            Err(err) => return Err(DoggoError::not_found()),
+        };
     Ok(file.into_response(&req))
 }
 
@@ -121,7 +126,12 @@ pub async fn get_file<'a, 'b>(
                 Ok(r) => r,
                 Err(_) => return Err(DoggoError::not_found()),
             };
-            return Ok(file.into_response(&req));
+            return Ok(file
+                .set_content_disposition(ContentDisposition {
+                    disposition: DispositionType::Inline,
+                    parameters: vec![DispositionParam::Filename(name)],
+                })
+                .into_response(&req));
         }
         Err(err) => match err {
             diesel::result::Error::NotFound => return Err(DoggoError::not_found()),
