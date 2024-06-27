@@ -6,6 +6,8 @@ Doggo Share is a file sharing platform, written entirely in rust with [actix-web
 
 Add a file, send it and share the generated link !
 
+Try it now: [Doggo Share](https://doggo-share.doggo-saloon.net)
+
 ## Prerequisites
 
 You will need to install rust and cargo. On Linux and MacOS systems :
